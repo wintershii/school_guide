@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.winter.dao.RouteMapper">
+  <resultMap id="BaseResultMap" type="com.winter.pojo.Route">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="start_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="start_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="arrive_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="arrive_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="distant" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, start_id, start_name, arrive_id, arrive_name, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from school_route
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from school_route
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.winter.pojo.Route">
+    insert into school_route (id, start_id, start_name, 
+      arrive_id, arrive_name, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{startId,jdbcType=INTEGER}, #{startName,jdbcType=VARCHAR}, 
+      #{arriveId,jdbcType=INTEGER}, #{arriveName,jdbcType=VARCHAR}, now(),
+      now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.winter.pojo.Route">
+    insert into school_route
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="startId != null">
+        start_id,
+      </if>
+      <if test="startName != null">
+        start_name,
+      </if>
+      <if test="arriveId != null">
+        arrive_id,
+      </if>
+      <if test="arriveName != null">
+        arrive_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="startId != null">
+        #{startId,jdbcType=INTEGER},
+      </if>
+      <if test="startName != null">
+        #{startName,jdbcType=VARCHAR},
+      </if>
+      <if test="arriveId != null">
+        #{arriveId,jdbcType=INTEGER},
+      </if>
+      <if test="arriveName != null">
+        #{arriveName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        now(),
+      </if>
+      <if test="updateTime != null">
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.winter.pojo.Route">
+    update school_route
+    <set>
+      <if test="startId != null">
+        start_id = #{startId,jdbcType=INTEGER},
+      </if>
+      <if test="startName != null">
+        start_name = #{startName,jdbcType=VARCHAR},
+      </if>
+      <if test="arriveId != null">
+        arrive_id = #{arriveId,jdbcType=INTEGER},
+      </if>
+      <if test="arriveName != null">
+        arrive_name = #{arriveName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.winter.pojo.Route">
+    update school_route
+    set start_id = #{startId,jdbcType=INTEGER},
+      start_name = #{startName,jdbcType=VARCHAR},
+      arrive_id = #{arriveId,jdbcType=INTEGER},
+      arrive_name = #{arriveName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAllRoutes" resultType="list" resultMap="BaseResultMap">
+    select id,start_id,start_name,arrive_id,arrive_name,distant,create_time,update_time
+    from school_route
+  </select>
+</mapper>

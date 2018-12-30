@@ -19,5 +19,8 @@
     <!--分离出的配置-->
     <import resource="applicationContext-datasource.xml"/>
 
-
+    <bean name="matrixMap" class="com.winter.vo.MatrixMap">
+        <property name="placeService" ref="placeServiceImpl"/>
+        <property name="routeService" ref="routeServiceImpl"/>
+    </bean>
 </beans>
