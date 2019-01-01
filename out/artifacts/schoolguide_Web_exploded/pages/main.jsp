@@ -33,18 +33,6 @@
             right:50px;
         }
     </style>
-    <%--<script>--%>
-        <%--var submit = document.getElementById('submit');--%>
-        <%--var id = document.getElementById('placeId');--%>
-        <%--submit.onclick = function(){--%>
-            <%--<c:forEach items="${sessionScope.placeList}" var="list">--%>
-                <%--<c:if test="${list.id = placeId }">--%>
-
-                <%--</c:if>--%>
-            <%--</c:forEach>--%>
-        <%--}--%>
-
-    <%--</script>--%>
 </head>
 <body>
 <div class="warrp">
@@ -58,9 +46,20 @@
             <h5 style="text-align: center">地点信息查询</h5>
 
             <select name="placeId" id="placeId">
-                <option>请选择</option>
+                <option value="0">
+                    <c:choose>
+                        <c:when test="${!empty choicePlaceName}">
+                            ${choicePlaceName}
+                        </c:when>
+                        <c:otherwise>
+                            请选择
+                        </c:otherwise>
+                    </c:choose>
+                </option>
                 <c:forEach items="${sessionScope.placeList}" var="list">
-                    <option value="${list.id}" <c:if test="${placeId == list.id}"/>>${list.name}</option>
+                    <option value="${list.id}">
+                        ${list.name}
+                    </option>
                 </c:forEach>
             </select>
             <input id="submit" type="submit" value="查询">
@@ -79,7 +78,16 @@
         <form action="/route/getRouteBetweenTwoVex.do" method="post">
             起始地点:
             <select name="startId">
-                <option>请选择</option>
+                <option value="0">
+                    <c:choose>
+                        <c:when test="${!empty startPlaceName}">
+                            ${startPlaceName}
+                        </c:when>
+                        <c:otherwise>
+                            请选择
+                        </c:otherwise>
+                    </c:choose>
+                </option>
                 <c:forEach items="${sessionScope.placeList}" var="list">
                     <option value="${list.id}">${list.name}</option>
                 </c:forEach>
@@ -87,7 +95,16 @@
             <br/>
             目标地点:
             <select name="arriveId">
-                <option>请选择</option>
+                <option value="0">
+                    <c:choose>
+                        <c:when test="${!empty arrivePlaceName}">
+                            ${arrivePlaceName}
+                        </c:when>
+                        <c:otherwise>
+                            请选择
+                        </c:otherwise>
+                    </c:choose>
+                </option>
                 <c:forEach items="${sessionScope.placeList}" var="list">
                     <option value="${list.id}">${list.name}</option>
                 </c:forEach>
@@ -98,7 +115,7 @@
             游览路径:<br/>
             <textarea style="width: 250px;height: 150px">${sessionScope.simpleRoute}</textarea>
             访问路径:<br/>
-            <textarea style="width: 250px;height: 150px">${sessionScope.placeIntro}</textarea>
+            <textarea style="width: 250px;height: 150px">${sessionScope.weightRoute}</textarea>
         </form>
 
 

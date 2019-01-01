@@ -19,10 +19,15 @@ public class PlaceController {
 
     @RequestMapping(value = "/getIntro",method = RequestMethod.POST)
     public String getPlaceIntro(int placeId, HttpSession session) {
+        if (placeId == 0) {
+            return "redirect:/pages/main.jsp";
+        }
         List<Place> list = (List<Place>) session.getAttribute("placeList");
         for (Place p : list) {
             if (p.getId() == placeId) {
                 session.setAttribute("placeIntro",p.getName() + ":" + p.getIntro());
+                session.setAttribute("choicePlaceId",placeId);
+                session.setAttribute("choicePlaceName",p.getName());
                 return "redirect:/pages/main.jsp";
             }
         }

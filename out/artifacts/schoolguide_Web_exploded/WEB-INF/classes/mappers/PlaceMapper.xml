@@ -97,4 +97,10 @@
     select id,name,intro,create_time,update_time
     from school_place
   </select>
+
+  <insert id="insertNewPlace" parameterType="map">
+    insert into school_place
+    values
+    (default,#{placeName},#{intro},now(),now())
+  </insert>
 </mapper>
