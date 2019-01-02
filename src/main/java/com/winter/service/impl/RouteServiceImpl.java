@@ -18,4 +18,13 @@ public class RouteServiceImpl implements RouteService {
         return routeMapper.selectAllRoutes();
     }
 
+    public int addNewRoute(Route route) {
+        routeMapper.addNewRoute(route);
+        return route.getId();
+    }
+
+
+    public int deleteRoute(Integer startId, Integer arriveId) {
+        return routeMapper.deleteByStartIdAndArriveId(startId,arriveId);
+    }
 }

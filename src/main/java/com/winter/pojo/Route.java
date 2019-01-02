@@ -39,6 +39,14 @@ public class Route {
         this.updateTime = updateTime;
     }
 
+    public Route(Integer startId, String startName, Integer arriveId, String arriveName, Integer distant) {
+        this.startId = startId;
+        this.startName = startName;
+        this.arriveId = arriveId;
+        this.arriveName = arriveName;
+        this.distant = distant;
+    }
+
     public Route() {
         super();
     }

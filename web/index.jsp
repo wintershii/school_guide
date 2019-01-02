@@ -11,29 +11,64 @@
 <head>
     <title>西安邮电大学校园导航图</title>
     <style>
-        .window {
-
+        *{
+            padding: 0;
+        }
+        .wrap{
+            width:100%;
+            height:100%;
+            position: relative;
+            background-image: url("/images/school_sence.png");
+            background-size: 100% 110%;
+        }
+        .window{
+            position: absolute;
+            text-align: center;
+            top: 228px;
+            left: 600px;
+            width: 300px;
+            height: 200px;
+            border: solid;
+            background-color: white;
+            opacity: 0.85;
         }
     </style>
 </head>
 <body>
-<c:if test="${!empty error}">
-    <font color="red"><c:out value="${error}"/></font>
-</c:if>
-<c:if test="${!empty register}">
-    <font color="red"><c:out value="${register}"/></font>
-</c:if>
+<div class="wrap">
+
+
+    <h2 style="text-align: center;top: 152px; left: 603px;position: absolute">西安邮电大学地图导航系统</h2>
 <div class="window">
-    登录
-    <form action="user/login.do" method="post">
+    <br/>
+    <a style="text-align: center; border: 2px">登录</a>
+    <br/>
+    <br/>
+    <form action="<c:url value="user/login.do"/>" method="post">
         账号：<input type="text" required="required" name="username">
         <br/>
         密码：<input type="password" required="required" name="password">
         <br/>
+        <br/>
         <input type="submit" value="登录">
-        <a href="/pages/register.jsp">注册新用户</a>
+        &nbsp;&nbsp;
+        <a href="<c:url value="/pages/register.jsp"/>">注册</a>
+        <br/>
+        <c:if test="${!empty error}">
+            <font color="red"><c:out value="${error}"/></font>
+            <%
+                session.removeAttribute("error");
+            %>
+        </c:if>
+        <c:if test="${!empty register}">
+            <font color="red"><c:out value="${register}"/></font>
+            <%
+                session.removeAttribute("register");
+            %>
+        </c:if>
     </form>
 </div>
 
+</div>
 </body>
 </html>

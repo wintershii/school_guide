@@ -19,7 +19,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     public int addNewPlace(String placeName, String intro) {
-        return placeMapper.insertNewPlace(placeName,intro);
+        Place place = new Place();
+        place.setName(placeName);
+        place.setIntro(intro);
+        placeMapper.insertNewPlace(place);
+        return place.getId();
     }
 
     public void deletePlace(Integer placeId) {

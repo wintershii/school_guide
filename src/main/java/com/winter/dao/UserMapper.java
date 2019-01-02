@@ -23,4 +23,5 @@ public interface UserMapper {
     int selectNumByUsername(String username);
 
     int insertRegister(@Param("username") String username, @Param("password") String password);
+
 }

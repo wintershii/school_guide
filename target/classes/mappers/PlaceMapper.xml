@@ -98,9 +98,9 @@
     from school_place
   </select>
 
-  <insert id="insertNewPlace" parameterType="map">
+  <insert id="insertNewPlace" parameterType="com.winter.pojo.Place" useGeneratedKeys="true" keyProperty="id">
     insert into school_place
     values
-    (default,#{placeName},#{intro},now(),now())
+    (default,#{name},#{intro},now(),now())
   </insert>
 </mapper>

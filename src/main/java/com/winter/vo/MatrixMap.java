@@ -45,8 +45,7 @@ public class MatrixMap {
         vex = new Place[list.size()];
         int temp = 0;
         for (Place p : list) {
-            vex[temp] = list.get(temp);
-            temp++;
+            vex[temp++] = p;
         }
 
         List<Route> routes = routeService.getAllRoutes();
@@ -68,18 +67,83 @@ public class MatrixMap {
 
 
     /**
+     * BFS寻找经过节点最少的路径
+     * @param startId
+     * @param arriveId
+     * @return
+     */
+    public static PrintRoute BFSRoute(Integer startId, Integer arriveId) {
+        setVisited();
+        Deque<Integer> queue = new ArrayDeque<>();
+        int pre[] = new int[vex.length];
+
+        int init = getVexIndexByPlaceId(startId);
+        int end = getVexIndexByPlaceId(arriveId);
+
+        int distance = 0;
+
+        for (int i = 0; i < pre.length; i++) {
+            if (i == init) {
+                pre[i] = -1;
+            } else {
+                pre[i] = init;
+            }
+        }
+
+        queue.offer(init);
+        visited[init] = true;
+        while ( !queue.isEmpty()) {
+            int placeIndex = queue.poll();
+            //记录出队节点的前一个节点
+            if (placeIndex == end) {
+                break;
+            }
+
+            int[] ints = getNextPoints(placeIndex);
+
+            for (int p : ints) {
+                if (p != -1 && !visited[p]) {
+                    queue.offer(p);
+                    visited[p] = true;
+                    pre[p] = placeIndex;
+                }
+            }
+
+        }
+
+        String[] routes = new String[vex.length];
+
+        for (int i = 0; i < pre.length; i++) {
+            System.out.print(i + ":" + pre[i] + " ");
+        }
+        System.out.println("end:" + end);
+
+        int ans = 0;
+        Deque<String> stack = new ArrayDeque<>();
+        for (int i = end ; ;) {
+            stack.push(vex[i].getName());
+            distance++;
+            i = pre[i];
+            if (i == -1) {
+                break;
+            }
+        }
+        while (!stack.isEmpty()) {
+            routes[ans++] = stack.pop();
+        }
+
+        return new PrintRoute(routes,distance - 2);
+    }
+
+
+    /**
      * 使用Dijkstra算法找两节点间的最短路径(带权)
      * @param startId
      * @param arriveId
      * @return
      */
     public static PrintRoute dijkstraRoute(Integer startId, Integer arriveId) {
-        for (int i = 0; i < vex.length; i++){
-            for (int j = 0; j < vex.length; j++) {
-                System.out.print(map[i][j] + " ");
-            }
-            System.out.println();
-        }
+        setVisited();
 
         int[] dis = new int[vex.length];
         int startIndex = getVexIndexByPlaceId(startId);
@@ -132,11 +196,6 @@ public class MatrixMap {
         String[] routes = new String[vex.length];
         int end = getVexIndexByPlaceId(arriveId);
 
-        for (int i = 0; i < pre.length; i++) {
-            System.out.print(i + ":" + pre[i] + " ");
-        }
-        System.out.println("end:" + end);
-
         int ans = 0;
         Deque<String> stack = new ArrayDeque<>();
         for (int i = end ; ;) {
@@ -150,11 +209,76 @@ public class MatrixMap {
             routes[ans++] = stack.pop();
         }
 
-        System.out.println(routes);
         return new PrintRoute(routes,dis[end]);
     }
 
 
+    /**
+     * Prime算法求出最佳布网
+     * @param startId
+     * @return
+     */
+    public static PrintRoute PrimeTree(Integer startId) {
+        int pointNum = vex.length;
+        int temp = 0;
+        //辅助数组
+        CloseEage[] close = new CloseEage[pointNum];
+        for (int i = 0; i < vex.length; i++) {
+            close[i] = new CloseEage();
+        }
+
+        for (int i = 0; i < vex.length; i++) {
+            for (int j = 0; j < vex.length; j++) {
+                if (map[i][j] == 0) {
+                    map[i][j] = 99999;
+                }
+            }
+        }
+
+        String[] routes = new String[vex.length];
+        int ans = 0;
+
+        int start = getVexIndexByPlaceId(startId);
+        routes[ans++] = vex[start].getName();
+
+        for (int i = 0; i < pointNum; i++) {
+            if (i != start) {
+                close[i].adjVex = start;
+                    close[i].lowCost = map[start][i];
+            }
+        }
+
+        for (int j = 0; j < pointNum - 1; j++) {
+            int min = Integer.MAX_VALUE;
+            for (int k = 0; k < pointNum; k++) {
+                if (close[k].lowCost != 0 && close[k].lowCost < min) {
+                    temp = k;
+                    min = close[k].lowCost;
+                }
+            }
+
+            close[temp].lowCost = 0;
+
+            routes[ans++] = vex[temp].getName();
+
+            for (int k = 0; k < pointNum; k++) {
+                if (k != temp && close[k].lowCost != 0 && map[temp][k] < close[k].lowCost ) {
+                    close[k].lowCost = map[temp][k];
+                    close[k].adjVex = temp;
+                }
+            }
+
+        }
+
+        return new PrintRoute(routes,0);
+    }
+
+
+    private static void setVisited() {
+        for (int i = 0; i < visited.length; i++) {
+            visited[i] = false;
+        }
+    }
 
 
     /**
@@ -185,24 +309,22 @@ public class MatrixMap {
      * 返回指定点的邻接点
      * @return
      */
-    public static int[] getNextPoints(int id) {
+    public static int[] getNextPoints(int index) {
         int[] nextVexs = new int[vex.length];
         for (int i = 0; i < vex.length; i++) {
             nextVexs[i] = -1;
         }
-        int t = 0;
         int temp = 0;
-        for (int i = 0; i < vex.length; i++) {
-            if (id == vex[i].getId()) {
-                t = i;
-            }
-        }
-
         for (int j = 0; j < map.length; j++) {
-            if (map[t][j] != 0) {
-                nextVexs[temp++] = vex[j].getId();
+            if (map[index][j] != 0) {
+                nextVexs[temp++] = j;
             }
         }
         return nextVexs;
     }
+}
+
+class CloseEage {
+    int adjVex;
+    int lowCost;
 }

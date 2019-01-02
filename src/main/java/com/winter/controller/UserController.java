@@ -2,8 +2,10 @@ package com.winter.controller;
 
 import com.winter.common.Const;
 import com.winter.pojo.Place;
+import com.winter.pojo.Route;
 import com.winter.pojo.User;
 import com.winter.service.PlaceService;
+import com.winter.service.RouteService;
 import com.winter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -24,6 +27,8 @@ public class UserController {
     @Autowired
     private PlaceService placeService;
 
+    @Autowired
+    private RouteService routeService;
     /**
      * 用户登录
      * @param username
@@ -32,8 +37,8 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/login.do",method = RequestMethod.POST)
-    public String login(String username, String password, HttpSession session) {
-
+    public String login(String username, String password, HttpSession session, HttpServletRequest request) {
+        String head = request.getContextPath();
         boolean isValid = userService.checkAccount(username,password);
         if (!isValid) {
             session.setAttribute("error","用户名或密码错误");
@@ -43,9 +48,11 @@ public class UserController {
         user.setPassword("");
         session.setAttribute(Const.CURRENT_USER,user);
         List<Place> placeList = placeService.getAllPlaces();
-        System.out.println(placeList);
+        List<Route> routeList = routeService.getAllRoutes();
 
         session.setAttribute("placeList",placeList);
+        session.setAttribute("routeList",routeList);
+
         return "redirect:/pages/main.jsp";
     }
 
@@ -56,8 +63,8 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/register.do",method = RequestMethod.POST)
-    public String register(String username, String password,HttpSession session) {
-
+    public String register(String username, String password,HttpSession session,HttpServletRequest request) {
+        String head = request.getContextPath();
         boolean hasRegistered = userService.checkUsername(username);
         if (hasRegistered) {
             session.setAttribute("exist","用户名已存在!");
@@ -69,6 +76,13 @@ public class UserController {
             return "redirect:/index.jsp";
         }
         session.setAttribute("register","注册失败!");
+        return "redirect:/index.jsp";
+    }
+
+    @RequestMapping(value = "/logout.do",method = RequestMethod.GET)
+    public String logout(HttpSession session, HttpServletRequest request) {
+        String head = request.getContextPath();
+        session.invalidate();
         return "redirect:/index.jsp";
     }
 }

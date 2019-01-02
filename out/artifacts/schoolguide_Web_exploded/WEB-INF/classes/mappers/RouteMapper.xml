@@ -122,4 +122,14 @@
     select id,start_id,start_name,arrive_id,arrive_name,distant,create_time,update_time
     from school_route
   </select>
+
+  <insert id="addNewRoute" parameterType="com.winter.pojo.Route" useGeneratedKeys="true" keyProperty="id">
+    insert into school_route
+    values (default,#{startId},#{startName},#{arriveId},#{arriveName},#{distant},now(),now())
+  </insert>
+
+  <delete id="deleteByStartIdAndArriveId" parameterType="map">
+    delete from school_route
+    where start_id = #{startId} and arrive_id = #{arriveId}
+  </delete>
 </mapper>

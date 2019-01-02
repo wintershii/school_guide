@@ -20,5 +20,5 @@ public interface PlaceMapper {
 
     List<Place> selectAllPlaces();
 
-    int insertNewPlace(@Param("placeName") String placeName,@Param("intro") String intro);
+    int insertNewPlace(Place place);
 }
