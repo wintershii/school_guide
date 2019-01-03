@@ -21,9 +21,15 @@ public class RouteController {
     @Autowired
     private RouteService routeService;
 
+    /**
+     * 中转节点最少与距离最短的路径
+     * @param startId
+     * @param arriveId
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/getRouteBetweenTwoVex.do",method = RequestMethod.POST)
-    public String getRouteBetweenTwoVex(Integer startId, Integer arriveId, HttpSession session,HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String getRouteBetweenTwoVex(Integer startId, Integer arriveId, HttpSession session) {
         if (startId == 0 || arriveId == 0) {
             return "redirect:/pages/main.jsp";
         }
@@ -64,9 +70,14 @@ public class RouteController {
     }
 
 
+    /**
+     * 获取图的最小生成树
+     * @param circleStartId
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/getBestCircle.do", method = RequestMethod.POST)
-    public String getBestCircle(Integer circleStartId,HttpSession session,HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String getBestCircle(Integer circleStartId,HttpSession session) {
         if (circleStartId == 0) {
             return "redirect:/pages/main.jsp";
         }
@@ -87,9 +98,16 @@ public class RouteController {
         return "redirect:/pages/main.jsp";
     }
 
+    /**
+     * 增加路线
+     * @param addStart
+     * @param addEnd
+     * @param distant
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/addRoute.do",method = RequestMethod.POST)
-    public String addRoute(String addStart,String addEnd, Integer distant, HttpSession session,HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String addRoute(String addStart,String addEnd, Integer distant, HttpSession session) {
         String[] start = addStart.split("=");
         String[] end = addEnd.split("=");
         Integer startId = Integer.parseInt(start[0]);
@@ -106,9 +124,15 @@ public class RouteController {
         return "redirect:/pages/routeShow.jsp";
     }
 
+    /**
+     * 删除路线
+     * @param startId
+     * @param arriveId
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/deleteRoute.do")
-    public String deleteRoute(Integer startId, Integer arriveId, HttpSession session, HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String deleteRoute(Integer startId, Integer arriveId, HttpSession session) {
         routeService.deleteRoute(startId,arriveId);
 
         List<Route> list = (List<Route>) session.getAttribute("routeList");

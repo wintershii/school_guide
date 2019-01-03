@@ -4,13 +4,9 @@ import com.winter.pojo.Place;
 import com.winter.pojo.Route;
 import com.winter.service.PlaceService;
 import com.winter.service.RouteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
-import static org.apache.commons.lang3.ArrayUtils.toArray;
 
 /**
  * value object 类
@@ -52,16 +48,18 @@ public class MatrixMap {
         route = new Route[routes.size()];
         temp = 0;
         for (Route r : routes) {
-            route[temp] = routes.get(temp);
-            temp++;
+            route[temp++] = r;
         }
         map = new int[vex.length][vex.length];
         visited = new boolean[vex.length];
         for (int i = 0; i < route.length; i++) {
             int m = getVexIndexByPlaceId(route[i].getStartId());
             int n = getVexIndexByPlaceId(route[i].getArriveId());
-            map[m][n] = route[i].getDistant();
-            map[n][m] = route[i].getDistant();
+            if (m != -1 && n != -1) {
+                map[m][n] = route[i].getDistant();
+                map[n][m] = route[i].getDistant();
+            }
+
         }
     }
 

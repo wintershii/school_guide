@@ -37,8 +37,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/login.do",method = RequestMethod.POST)
-    public String login(String username, String password, HttpSession session, HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String login(String username, String password, HttpSession session) {
         boolean isValid = userService.checkAccount(username,password);
         if (!isValid) {
             session.setAttribute("error","用户名或密码错误");
@@ -63,8 +62,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/register.do",method = RequestMethod.POST)
-    public String register(String username, String password,HttpSession session,HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String register(String username, String password,HttpSession session) {
         boolean hasRegistered = userService.checkUsername(username);
         if (hasRegistered) {
             session.setAttribute("exist","用户名已存在!");
@@ -79,6 +77,12 @@ public class UserController {
         return "redirect:/index.jsp";
     }
 
+    /**
+     * 用户退出
+     * @param session
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/logout.do",method = RequestMethod.GET)
     public String logout(HttpSession session, HttpServletRequest request) {
         String head = request.getContextPath();

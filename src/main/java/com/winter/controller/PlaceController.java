@@ -18,10 +18,14 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
+    /**
+     * 获取指定地点信息
+     * @param placeId
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/getIntro.do",method = RequestMethod.POST)
-    public String getPlaceIntro(int placeId, HttpSession session, HttpServletRequest request) {
-        String head = request.getContextPath();
-        System.out.println(head);
+    public String getPlaceIntro(int placeId, HttpSession session) {
         if (placeId == 0) {
             return "redirect:/pages/main.jsp";
         }
@@ -37,9 +41,15 @@ public class PlaceController {
         return "redirect:/pages/main.jsp";
     }
 
+    /**
+     * 增加地点
+     * @param placeName
+     * @param intro
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/addPlace.do",method = RequestMethod.POST)
-    public String addNewPlace(String placeName, String intro,HttpSession session,HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String addNewPlace(String placeName, String intro,HttpSession session) {
         int id = placeService.addNewPlace(placeName,intro);
         List<Place> placeList = (List<Place>) session.getAttribute("placeList");
         Place p = new Place();
@@ -51,9 +61,14 @@ public class PlaceController {
         return "redirect:/pages/placeShow.jsp";
     }
 
+    /**
+     * 删除地点
+     * @param placeId
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/deletePlace.do",method = RequestMethod.GET)
-    public String deletePlace(Integer placeId,HttpSession session,HttpServletRequest request) {
-        String head = request.getContextPath();
+    public String deletePlace(Integer placeId,HttpSession session) {
         placeService.deletePlace(placeId);
         List<Place> list = (List<Place>) session.getAttribute("placeList");
         int index = 0;

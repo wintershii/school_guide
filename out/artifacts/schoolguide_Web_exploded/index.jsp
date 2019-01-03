@@ -18,7 +18,7 @@
             width:100%;
             height:100%;
             position: relative;
-            background-image: url("/images/school_sence.png");
+            background-image: url(<c:url value="/images/school_sence.png"/>);
             background-size: 100% 110%;
         }
         .window{
